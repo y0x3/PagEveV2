@@ -21,12 +21,12 @@
     <script is:inline>
       const galleryContainer = document.getElementById('galleryContainer');
 
-      // Carga las imágenes desde el endpoint de Cloudinary
+      // Carga las imágenes desde el archivo JSON
       async function loadImages() {
         try {
-          const response = await fetch('/public/api/cloudinary-list');
+          const response = await fetch('/api/cloudinary-list.json'); // Ruta corregida
           if (!response.ok) {
-            throw new Error('Error al obtener las imágenes desde Cloudinary');
+            throw new Error('Error al obtener las imágenes desde el archivo JSON');
           }
           const data = await response.json();
           const images = data.images.reverse(); // Ordena las imágenes desde la primera subida a la última
@@ -41,7 +41,7 @@
             img.src = image;
             img.alt = `Imagen ${index + 1}`;
             img.style.width = '100%'; // Asegura que la imagen se ajuste al tamaño de la tarjeta
-            img.style.borderRadius = '30px'; // Coincide con el borde redondeado de la tarjeta
+            img.style.borderRadius = '10px'; // Opcional: bordes redondeados
 
             card.appendChild(img);
             galleryContainer.appendChild(card);
