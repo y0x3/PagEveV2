@@ -1,11 +1,122 @@
----
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Galería de Fotos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/styles/index.css" />
+  </head>
+  <body>
+    <h1>GALERIA DE FOTOS</h1>
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
----
+    <div class="image-container">
+      <img id="randomImage" src="" alt="Imagen aleatoria" />
+    </div>
 
-<Layout>
-	<Welcome />
-</Layout>
+    <input type="file" id="fileInput" accept="image/*" multiple style="display:none" />
+    <button id="uploadBtn">Subir fotos</button>
+
+    <footer>
+      <a href="/galeria" style="text-decoration: none; color: inherit;">
+        Boda Evelyn y Mario
+      </a>
+    </footer>
+
+    <script is:inline>
+      let images = [];
+      const randomImage = document.getElementById('randomImage');
+      const fileInput = document.getElementById('fileInput');
+      const uploadBtn = document.getElementById('uploadBtn');
+
+      // Carga las imágenes desde el endpoint de Cloudinary
+      async function loadImages() {
+        try {
+          const response = await fetch('/api/cloudinary-list');
+          if (!response.ok) {
+            throw new Error('Error al obtener las imágenes desde Cloudinary');
+          }
+          const data = await response.json();
+          images = data.images;
+
+          if (images.length === 0) {
+            console.error('No se encontraron imágenes en Cloudinary');
+            return;
+          }
+
+          showRandomImage(); // Muestra una imagen aleatoria al cargar
+        } catch (error) {
+          console.error('Error al cargar las imágenes:', error);
+        }
+      }
+
+      // Muestra una imagen aleatoria
+      function showRandomImage() {
+        if (images.length === 0) return;
+        const randomIndex = Math.floor(Math.random() * images.length);
+        randomImage.src = images[randomIndex];
+      }
+
+      // Cambia la imagen cada 3 segundos
+      setInterval(showRandomImage, 3000);
+
+      // Subida de imagen
+      uploadBtn.addEventListener('click', () => {
+        fileInput.click();
+      });
+
+      fileInput.addEventListener('change', async (event) => {
+        const files = event.target.files; // Obtiene todos los archivos seleccionados
+        if (!files || files.length === 0) return;
+
+        uploadBtn.disabled = true;
+        uploadBtn.textContent = 'Subiendo...';
+
+        try {
+          for (const file of files) {
+            // Subida real a Cloudinary
+            const url = await uploadToCloudinary(file, 'du24gx7kz', 'galeria_publica');
+            images.unshift(url); // Agrega cada nueva imagen al inicio del arreglo
+          }
+
+          alert('Imágenes subidas con éxito');
+
+          // Reinicia el índice y muestra una nueva imagen
+          showRandomImage();
+        } catch (err) {
+          alert('Error al subir las imágenes');
+          console.error(err);
+        }
+
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = 'Subir fotos';
+        fileInput.value = ''; // Limpia el input para permitir nuevas selecciones
+      });
+
+      // Función de subida a Cloudinary
+      async function uploadToCloudinary(file, cloudName, uploadPreset) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", uploadPreset);
+
+        try {
+          const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!response.ok) {
+            throw new Error("Error al subir la imagen a Cloudinary");
+          }
+
+          const data = await response.json();
+          return data.secure_url; // Devuelve la URL segura de la imagen subida
+        } catch (error) {
+          console.error("Error al subir la imagen:", error);
+          throw error;
+        }
+      }
+
+      // Carga inicial de imágenes
+      document.addEventListener('DOMContentLoaded', loadImages);
+    </script>
+  </body>
+</html>

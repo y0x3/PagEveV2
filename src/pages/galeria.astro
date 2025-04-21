@@ -1,0 +1,59 @@
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Galería Completa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/styles/galeria.css" />
+  </head>
+  <body>
+    <h1>Galería Completa</h1>
+
+    <div class="gallery-container" id="galleryContainer">
+      <p>Cargando imágenes...</p>
+    </div>
+
+    <footer>
+      <a href="/" style="text-decoration: none; color: inherit;">
+        Regresar a la página principal
+      </a>
+    </footer>
+
+    <script is:inline>
+      const galleryContainer = document.getElementById('galleryContainer');
+
+      // Carga las imágenes desde el endpoint de Cloudinary
+      async function loadImages() {
+        try {
+          const response = await fetch('/api/cloudinary-list');
+          if (!response.ok) {
+            throw new Error('Error al obtener las imágenes desde Cloudinary');
+          }
+          const data = await response.json();
+          const images = data.images.reverse(); // Ordena las imágenes desde la primera subida a la última
+
+          // Limpia el contenedor y agrega las imágenes
+          galleryContainer.innerHTML = '';
+          images.forEach((image, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            const img = document.createElement('img');
+            img.src = image;
+            img.alt = `Imagen ${index + 1}`;
+            img.style.width = '100%'; // Asegura que la imagen se ajuste al tamaño de la tarjeta
+            img.style.borderRadius = '30px'; // Coincide con el borde redondeado de la tarjeta
+
+            card.appendChild(img);
+            galleryContainer.appendChild(card);
+          });
+        } catch (error) {
+          console.error('Error al cargar las imágenes:', error);
+          galleryContainer.innerHTML = '<p>Error al cargar las imágenes.</p>';
+        }
+      }
+
+      // Llama a la función para cargar las imágenes
+      loadImages();
+    </script>
+  </body>
+</html>
