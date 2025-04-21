@@ -3,7 +3,7 @@
     <meta charset="UTF-8" />
     <title>Galería Completa</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/src/styles/galeria.css" />
+    <link rel="stylesheet" href="/styles/galeria.css" />
   </head>
   <body>
     <h1>Galería Completa</h1>
@@ -24,7 +24,7 @@
       // Carga las imágenes desde el endpoint de Cloudinary
       async function loadImages() {
         try {
-          const response = await fetch('/api/cloudinary-list');
+          const response = await fetch('/public/api/cloudinary-list');
           if (!response.ok) {
             throw new Error('Error al obtener las imágenes desde Cloudinary');
           }
