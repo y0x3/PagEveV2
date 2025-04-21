@@ -28,32 +28,39 @@
       const uploadBtn = document.getElementById('uploadBtn');
 
       // Carga las imágenes desde el endpoint de Cloudinary
-      async function loadImages() {
-        try {
-          const response = await fetch('/api/cloudinary-list');
-          if (!response.ok) {
-            throw new Error('Error al obtener las imágenes desde Cloudinary');
-          }
-          const data = await response.json();
-          images = data.images;
+      document.addEventListener('DOMContentLoaded', () => {
+        const randomImage = document.getElementById('randomImage'); // Elemento donde se mostrará la imagen
+        let images = []; // Lista de imágenes
 
-          if (images.length === 0) {
-            console.error('No se encontraron imágenes en Cloudinary');
-            return;
-          }
+        async function loadImages() {
+          try {
+            const response = await fetch('/api/cloudinary-list.json');
+            if (!response.ok) {
+              throw new Error('Error al obtener las imágenes desde el archivo JSON');
+            }
+            const data = await response.json();
+            images = data.images; // Guarda las imágenes en la lista
 
-          showRandomImage(); // Muestra una imagen aleatoria al cargar
-        } catch (error) {
-          console.error('Error al cargar las imágenes:', error);
+            if (images.length > 0) {
+              showRandomImage(); // Muestra la primera imagen aleatoria
+              setInterval(showRandomImage, 3000); // Cambia la imagen cada 3 segundos
+            } else {
+              console.error('No se encontraron imágenes en el archivo JSON.');
+            }
+          } catch (error) {
+            console.error('Error al cargar las imágenes:', error);
+          }
         }
-      }
 
-      // Muestra una imagen aleatoria
-      function showRandomImage() {
-        if (images.length === 0) return;
-        const randomIndex = Math.floor(Math.random() * images.length);
-        randomImage.src = images[randomIndex];
-      }
+        // Función para mostrar una imagen aleatoria
+        function showRandomImage() {
+          if (images.length === 0) return; // Si no hay imágenes, no hace nada
+          const randomIndex = Math.floor(Math.random() * images.length); // Índice aleatorio
+          randomImage.src = images[randomIndex]; // Cambia la imagen
+        }
+
+        loadImages(); // Carga las imágenes al iniciar
+      });
 
       // Cambia la imagen cada 3 segundos
       setInterval(showRandomImage, 3000);
