@@ -24,7 +24,7 @@
       // Carga las imágenes desde el archivo JSON
       async function loadImages() {
         try {
-          const response = await fetch('/api/cloudinary-list.json'); // Ruta corregida
+          const response = await fetch('/api/cloudinary-list'); // Cambiado para usar el endpoint dinámico
           if (!response.ok) {
             throw new Error('Error al obtener las imágenes desde el archivo JSON');
           }

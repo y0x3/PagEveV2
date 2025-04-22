@@ -29,14 +29,11 @@
 
       // Carga las imágenes desde el endpoint de Cloudinary
       document.addEventListener('DOMContentLoaded', () => {
-        const randomImage = document.getElementById('randomImage'); // Elemento donde se mostrará la imagen
-        let images = []; // Lista de imágenes
-
         async function loadImages() {
           try {
-            const response = await fetch('/api/cloudinary-list.json');
+            const response = await fetch('/api/cloudinary-list'); // Cambiado para usar el endpoint dinámico
             if (!response.ok) {
-              throw new Error('Error al obtener las imágenes desde el archivo JSON');
+              throw new Error('Error al obtener las imágenes desde Cloudinary');
             }
             const data = await response.json();
             images = data.images; // Guarda las imágenes en la lista
@@ -45,7 +42,7 @@
               showRandomImage(); // Muestra la primera imagen aleatoria
               setInterval(showRandomImage, 3000); // Cambia la imagen cada 3 segundos
             } else {
-              console.error('No se encontraron imágenes en el archivo JSON.');
+              console.error('No se encontraron imágenes en Cloudinary.');
             }
           } catch (error) {
             console.error('Error al cargar las imágenes:', error);
@@ -60,70 +57,64 @@
         }
 
         loadImages(); // Carga las imágenes al iniciar
-      });
 
-      // Cambia la imagen cada 3 segundos
-      setInterval(showRandomImage, 3000);
+        // Subida de imagen
+        uploadBtn.addEventListener('click', () => {
+          fileInput.click();
+        });
 
-      // Subida de imagen
-      uploadBtn.addEventListener('click', () => {
-        fileInput.click();
-      });
+        fileInput.addEventListener('change', async (event) => {
+          const files = event.target.files; // Obtiene todos los archivos seleccionados
+          if (!files || files.length === 0) return;
 
-      fileInput.addEventListener('change', async (event) => {
-        const files = event.target.files; // Obtiene todos los archivos seleccionados
-        if (!files || files.length === 0) return;
+          uploadBtn.disabled = true;
+          uploadBtn.textContent = 'Subiendo...';
 
-        uploadBtn.disabled = true;
-        uploadBtn.textContent = 'Subiendo...';
+          try {
+            for (const file of files) {
+              // Subida real a Cloudinary
+              const url = await uploadToCloudinary(file, 'du24gx7kz', 'galeria_publica');
+              images.unshift(url); // Agrega cada nueva imagen al inicio del arreglo
+            }
 
-        try {
-          for (const file of files) {
-            // Subida real a Cloudinary
-            const url = await uploadToCloudinary(file, 'du24gx7kz', 'galeria_publica');
-            images.unshift(url); // Agrega cada nueva imagen al inicio del arreglo
+            alert('Imágenes subidas con éxito');
+
+            // Recarga las imágenes para incluir las nuevas
+            await loadImages();
+          } catch (err) {
+            alert('Error al subir las imágenes');
+            console.error(err);
           }
 
-          alert('Imágenes subidas con éxito');
+          uploadBtn.disabled = false;
+          uploadBtn.textContent = 'Subir fotos';
+          fileInput.value = ''; // Limpia el input para permitir nuevas selecciones
+        });
 
-          // Reinicia el índice y muestra una nueva imagen
-          showRandomImage();
-        } catch (err) {
-          alert('Error al subir las imágenes');
-          console.error(err);
-        }
+        // Función de subida a Cloudinary
+        async function uploadToCloudinary(file, cloudName, uploadPreset) {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("upload_preset", uploadPreset);
 
-        uploadBtn.disabled = false;
-        uploadBtn.textContent = 'Subir fotos';
-        fileInput.value = ''; // Limpia el input para permitir nuevas selecciones
-      });
+          try {
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+              method: "POST",
+              body: formData,
+            });
 
-      // Función de subida a Cloudinary
-      async function uploadToCloudinary(file, cloudName, uploadPreset) {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", uploadPreset);
+            if (!response.ok) {
+              throw new Error("Error al subir la imagen a Cloudinary");
+            }
 
-        try {
-          const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-            method: "POST",
-            body: formData,
-          });
-
-          if (!response.ok) {
-            throw new Error("Error al subir la imagen a Cloudinary");
+            const data = await response.json();
+            return data.secure_url; // Devuelve la URL segura de la imagen subida
+          } catch (error) {
+            console.error("Error al subir la imagen:", error);
+            throw error;
           }
-
-          const data = await response.json();
-          return data.secure_url; // Devuelve la URL segura de la imagen subida
-        } catch (error) {
-          console.error("Error al subir la imagen:", error);
-          throw error;
         }
-      }
-
-      // Carga inicial de imágenes
-      document.addEventListener('DOMContentLoaded', loadImages);
+      });
     </script>
   </body>
 </html>

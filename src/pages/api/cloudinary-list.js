@@ -1,27 +1,4 @@
 import 'dotenv/config';
-import { v2 as cloudinary } from 'cloudinary';
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-export async function get(req, res) {
-  try {
-    const { resources } = await cloudinary.search
-      .expression('resource_type:image') // Devuelve todas las imágenes
-      .sort_by('public_id', 'desc')
-      .max_results(30)
-      .execute();
-
-    const images = resources.map((file) => file.secure_url);
-    return res.json({ images });
-  } catch (error) {
-    console.error('Error al obtener las imágenes:', error);
-    return res.status(500).json({ error: 'Error al obtener las imágenes' });
-  }
-}
 
 export async function GET() {
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
