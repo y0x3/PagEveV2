@@ -29,13 +29,21 @@
 
       // Carga las imágenes desde el endpoint de Cloudinary
       document.addEventListener('DOMContentLoaded', () => {
+        
         async function loadImages() {
           try {
-            const response = await fetch('/api/cloudinary-list'); // Cambiado para usar el endpoint dinámico
+            const response = await fetch('/api/cloudinary-list'); // Endpoint dinámico
             if (!response.ok) {
-              throw new Error('Error al obtener las imágenes desde Cloudinary');
+              throw new Error(`Error al obtener las imágenes: ${response.statusText}`);
             }
+
             const data = await response.json();
+            console.log('Respuesta de la API:', data); // Depuración
+
+            if (!data.images || !Array.isArray(data.images)) {
+              throw new Error('La respuesta del servidor no contiene el campo "images"');
+            }
+
             images = data.images; // Guarda las imágenes en la lista
 
             if (images.length > 0) {
