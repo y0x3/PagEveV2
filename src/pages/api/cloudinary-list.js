@@ -10,10 +10,8 @@ export async function GET() {
     return new Response(JSON.stringify({ error: 'Faltan variables de entorno de Cloudinary' }), { status: 500 });
   }
 
-  // URL con parámetros opcionales: orden descendente y límite de resultados
   const url = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image?direction=desc&max_results=20`;
 
-  // Autenticación básica
   let auth;
   try {
     auth = Buffer.from(`${apiKey}:${apiSecret}`).toString('base64');
@@ -47,7 +45,11 @@ export async function GET() {
   const data = await response.json();
   const images = data.resources.map(img => img.secure_url);
 
+  // Agrega el encabezado Cache-Control para desactivar el caché
   return new Response(JSON.stringify({ images }), {
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-store', // Desactiva el caché
+    },
   });
 }
