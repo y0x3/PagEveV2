@@ -19,41 +19,51 @@
     </footer>
 
     <script is:inline>
-      const galleryContainer = document.getElementById('galleryContainer');
-
-      // Carga las imágenes desde el archivo JSON
-      async function loadImages() {
-        try {
-          const response = await fetch('/api/cloudinary-list'); // Cambiado para usar el endpoint dinámico
-          if (!response.ok) {
-            throw new Error('Error al obtener las imágenes desde el archivo JSON');
-          }
-          const data = await response.json();
-          const images = data.images.reverse(); // Ordena las imágenes desde la primera subida a la última
-
-          // Limpia el contenedor y agrega las imágenes
-          galleryContainer.innerHTML = '';
-          images.forEach((image, index) => {
-            const card = document.createElement('div');
-            card.className = 'card';
-
-            const img = document.createElement('img');
-            img.src = image;
-            img.alt = `Imagen ${index + 1}`;
-            img.style.width = '100%'; // Asegura que la imagen se ajuste al tamaño de la tarjeta
-            img.style.borderRadius = '10px'; // Opcional: bordes redondeados
-
-            card.appendChild(img);
-            galleryContainer.appendChild(card);
-          });
-        } catch (error) {
-          console.error('Error al cargar las imágenes:', error);
-          galleryContainer.innerHTML = '<p>Error al cargar las imágenes.</p>';
+      document.addEventListener('DOMContentLoaded', () => {
+        const galleryContainer = document.getElementById('galleryContainer');
+    
+        if (!galleryContainer) {
+          console.error("El contenedor de la galería no se encontró en el DOM.");
+          return;
         }
-      }
-
-      // Llama a la función para cargar las imágenes
-      loadImages();
+    
+        // Función para cargar las imágenes desde la API
+        async function loadGallery() {
+          try {
+            const response = await fetch('/api/cloudinary-list', {
+              cache: 'no-store', // Asegúrate de que no use caché
+            });
+    
+            if (!response.ok) {
+              throw new Error(`Error al obtener las imágenes: ${response.statusText}`);
+            }
+    
+            const data = await response.json();
+    
+            // Limpia el contenedor antes de agregar nuevas imágenes
+            galleryContainer.innerHTML = '';
+    
+            // Agrega las imágenes al contenedor
+            data.images.forEach((url) => {
+              const card = document.createElement('div');
+              card.className = 'card'; // Aplica el estilo de la tarjeta
+    
+              const img = document.createElement('img');
+              img.src = url;
+              img.alt = 'Imagen de la galería';
+              img.className = 'gallery-image';
+    
+              card.appendChild(img); // Agrega la imagen dentro de la tarjeta
+              galleryContainer.appendChild(card); // Agrega la tarjeta al contenedor
+            });
+          } catch (error) {
+            console.error('Error al cargar la galería:', error);
+          }
+        }
+    
+        // Llama a la función para cargar la galería
+        loadGallery();
+      });
     </script>
   </body>
 </html>
