@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-export async function GET() {
+export async function GET({ url }) {
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const apiKey = process.env.CLOUDINARY_API_KEY;
   const apiSecret = process.env.CLOUDINARY_API_SECRET;
@@ -10,7 +10,10 @@ export async function GET() {
     return new Response(JSON.stringify({ error: 'Faltan variables de entorno de Cloudinary' }), { status: 500 });
   }
 
-  const url = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image?direction=desc&max_results=10000`;
+  // Obtén el cursor de la URL de la solicitud
+  const nextCursor = url.searchParams.get('next_cursor') || '';
+
+  const apiUrl = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image?direction=desc&max_results=20${nextCursor ? `&next_cursor=${nextCursor}` : ''}`;
 
   let auth;
   try {
@@ -22,7 +25,7 @@ export async function GET() {
 
   let response;
   try {
-    response = await fetch(url, {
+    response = await fetch(apiUrl, {
       headers: {
         Authorization: `Basic ${auth}`,
       },
@@ -45,8 +48,10 @@ export async function GET() {
   const data = await response.json();
   const images = data.resources.map(img => img.secure_url);
 
-  // Agrega el encabezado Cache-Control para desactivar el caché
-  return new Response(JSON.stringify({ images }), {
+  return new Response(JSON.stringify({ 
+    images, 
+    next_cursor: data.next_cursor || null // Devuelve el cursor para la siguiente página
+  }), {
     headers: {
       'Content-Type': 'application/json',
       'Cache-Control': 'no-store', // Desactiva el caché
