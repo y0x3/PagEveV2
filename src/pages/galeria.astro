@@ -91,7 +91,7 @@
 
         // Función para manejar el evento de scroll
         function handleScroll() {
-          const scrollableElement = document.documentElement || document.body; // Asegúrate de usar el contenedor correcto
+          const scrollableElement = document.getElementById('galleryContainer'); // Contenedor específico
           const { scrollTop, scrollHeight, clientHeight } = scrollableElement;
 
           if (scrollTop + clientHeight >= scrollHeight - 100) {
