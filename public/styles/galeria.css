@@ -23,6 +23,7 @@ h1 {
   gap: 1.5rem;
   min-height: 100vh;
   padding: 10px;
+  overflow: auto;
 }
 
 .card {
