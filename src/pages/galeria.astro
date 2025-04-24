@@ -3,6 +3,7 @@
     <meta charset="UTF-8" />
     <title>Galería Completa</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/styles/galeria.css" />
   </head>
   <body>
@@ -12,11 +13,17 @@
       <p>Cargando imágenes...</p>
     </div>
 
+    <!-- Modal para mostrar imagen ampliada -->
+    <div id="modal" class="modal" onclick="closeModal()">
+      <img id="modal-img" src="" alt="Imagen ampliada">
+    </div>
+
     <footer>
-      <a href="/" style="text-decoration: none; color: inherit;">
+      <a href="/" id="backBtn" class="back-btn">
         Regresar a la página principal
       </a>
     </footer>
+    
 
     <script is:inline>
       document.addEventListener('DOMContentLoaded', () => {
@@ -53,6 +60,9 @@
               img.alt = 'Imagen de la galería';
               img.className = 'gallery-image';
 
+              // Agregar evento para abrir la imagen en el modal
+              img.addEventListener('click', () => openModal(url));
+
               card.appendChild(img); // Agrega la imagen dentro de la tarjeta
               galleryContainer.appendChild(card); // Agrega la tarjeta al contenedor
             });
@@ -68,6 +78,20 @@
         const title = document.querySelector('h1');
         title.addEventListener('click', loadGallery); // Recarga la galería al hacer clic en el título
       });
+
+      // Función para abrir el modal con la imagen seleccionada
+      function openModal(imageSrc) {
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modal-img');
+        modal.style.display = 'flex';
+        modalImg.src = imageSrc;
+      }
+
+      // Función para cerrar el modal al hacer clic fuera de la imagen
+      function closeModal() {
+        const modal = document.getElementById('modal');
+        modal.style.display = 'none';
+      }
     </script>
   </body>
 </html>

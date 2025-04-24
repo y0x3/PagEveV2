@@ -10,7 +10,7 @@ export async function GET() {
     return new Response(JSON.stringify({ error: 'Faltan variables de entorno de Cloudinary' }), { status: 500 });
   }
 
-  const url = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image?direction=desc&max_results=20`;
+  const url = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image?direction=desc&max_results=10000`;
 
   let auth;
   try {
