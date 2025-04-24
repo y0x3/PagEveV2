@@ -12,7 +12,6 @@
     <div class="gallery-container" id="galleryContainer">
       <p>Cargando imágenes...</p>
     </div>
-    <div id="sentinel"></div> 
     <!-- Modal para mostrar imagen ampliada -->
     <div id="modal" class="modal" onclick="closeModal()">
       <img id="modal-img" src="" alt="Imagen ampliada">
@@ -84,7 +83,8 @@
       }
 
       function handleScroll() {
-        const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+        const scrollableElement = document.documentElement || document.body;
+        const { scrollTop, scrollHeight, clientHeight } = scrollableElement;
 
         console.log('Scroll detectado:', { scrollTop, scrollHeight, clientHeight });
 
