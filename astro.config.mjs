@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
-import vercel from '@astrojs/vercel/server'; // Importa el adaptador de Vercel
+import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   site: 'https://pag-eve-v2.vercel.app/', // Cambia esto por tu dominio en Vercel
