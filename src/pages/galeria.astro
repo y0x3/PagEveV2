@@ -12,7 +12,7 @@
     <div class="gallery-container" id="galleryContainer">
       <p>Cargando imágenes...</p>
     </div>
-
+    <div id="sentinel"></div> 
     <!-- Modal para mostrar imagen ampliada -->
     <div id="modal" class="modal" onclick="closeModal()">
       <img id="modal-img" src="" alt="Imagen ampliada">
@@ -27,99 +27,97 @@
 
     <script is:inline>
       document.addEventListener('DOMContentLoaded', () => {
-        const galleryContainer = document.getElementById('galleryContainer');
-        let nextCursor = null; // Cursor para la paginación
-        let isLoading = false; // Evita múltiples solicitudes simultáneas
+      const galleryContainer = document.getElementById('galleryContainer');
+      let nextCursor = null; // Cursor para la paginación
+      let isLoading = false; // Evita múltiples solicitudes simultáneas
 
-        if (!galleryContainer) {
-          console.error("El contenedor de la galería no se encontró en el DOM.");
-          return;
-        }
-        
-        // Función para cargar las imágenes desde la API
-        async function loadGallery() {
-          if (isLoading) return; // Evita cargar si ya hay una solicitud en curso
-          isLoading = true;
+      if (!galleryContainer) {
+        console.error("El contenedor de la galería no se encontró en el DOM.");
+        return;
+      }
 
-          try {
-            const url = `/api/cloudinary-list${nextCursor ? `?next_cursor=${nextCursor}` : ''}`;
-            const response = await fetch(url, {
-              cache: 'no-store', // Asegúrate de que no use caché
-            });
+      // Función para cargar las imágenes desde la API
+      async function loadGallery() {
+        if (isLoading) return; // Evita cargar si ya hay una solicitud en curso
+        isLoading = true;
 
-            if (!response.ok) {
-              throw new Error(`Error al obtener las imágenes: ${response.statusText}`);
-            }
+        try {
+          const url = `/api/cloudinary-list${nextCursor ? `?next_cursor=${nextCursor}` : ''}`;
+          const response = await fetch(url, {
+            cache: 'no-store', // Asegúrate de que no use caché
+          });
 
-            const data = await response.json();
-
-            // Limpia el contenedor solo en la primera carga
-            if (!nextCursor) {
-              galleryContainer.innerHTML = '';
-            }
-
-            // Agrega las imágenes al contenedor
-            data.images.forEach((url) => {
-              const card = document.createElement('div');
-              card.className = 'card'; // Aplica el estilo de la tarjeta
-
-              const img = document.createElement('img');
-              img.src = url;
-              img.alt = 'Imagen de la galería';
-              img.className = 'gallery-image';
-
-              // Agregar evento para abrir la imagen en el modal
-              img.addEventListener('click', () => openModal(url));
-
-              card.appendChild(img); // Agrega la imagen dentro de la tarjeta
-              galleryContainer.appendChild(card); // Agrega la tarjeta al contenedor
-            });
-
-            // Actualiza el cursor para la siguiente página
-            nextCursor = data.next_cursor;
-
-            // Si no hay más imágenes, elimina el evento de scroll
-            if (!nextCursor) {
-              window.removeEventListener('scroll', handleScroll);
-            }
-          } catch (error) {
-            console.error('Error al cargar la galería:', error);
-          } finally {
-            isLoading = false; // Permite nuevas solicitudes
+          if (!response.ok) {
+            throw new Error(`Error al obtener las imágenes: ${response.statusText}`);
           }
-        }
 
-        // Función para manejar el evento de scroll
-        function handleScroll() {
-          const scrollableElement = document.getElementById('galleryContainer'); // Contenedor específico
-          const { scrollTop, scrollHeight, clientHeight } = scrollableElement;
+          const data = await response.json();
 
-          if (scrollTop + clientHeight >= scrollHeight - 100) {
-            loadGallery(); // Carga más imágenes cuando el usuario llega al final
+          // Limpia el contenedor solo en la primera carga
+          if (!nextCursor) {
+            galleryContainer.innerHTML = '';
           }
+
+          // Agrega las imágenes al contenedor
+          data.images.forEach((url) => {
+            const card = document.createElement('div');
+            card.className = 'card'; // Aplica el estilo de la tarjeta
+
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = 'Imagen de la galería';
+            img.className = 'gallery-image';
+
+            // Agregar evento para abrir la imagen en el modal
+            img.addEventListener('click', () => openModal(url));
+
+            card.appendChild(img); // Agrega la imagen dentro de la tarjeta
+            galleryContainer.appendChild(card); // Agrega la tarjeta al contenedor
+          });
+
+          // Actualiza el cursor para la siguiente página
+          nextCursor = data.next_cursor;
+
+          // Si no hay más imágenes, elimina el evento de scroll
+          if (!nextCursor) {
+            window.removeEventListener('scroll', handleScroll);
+          }
+        } catch (error) {
+          console.error('Error al cargar la galería:', error);
+        } finally {
+          isLoading = false; // Permite nuevas solicitudes
         }
+      }
 
-        // Llama a la función para cargar la galería inicialmente
-        loadGallery();
+      // Función para manejar el evento de scroll
+      function handleScroll() {
+        const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
-        // Agrega el evento de scroll y touchmove
-        window.addEventListener('scroll', handleScroll);
-        window.addEventListener('touchmove', handleScroll);
-
-        // Función para abrir el modal con la imagen seleccionada
-        function openModal(imageSrc) {
-          const modal = document.getElementById('modal');
-          const modalImg = document.getElementById('modal-img');
-          modal.style.display = 'flex';
-          modalImg.src = imageSrc;
+        if (scrollTop + clientHeight >= scrollHeight - 100) {
+          loadGallery(); // Carga más imágenes cuando el usuario llega al final
         }
+      }
 
-        // Función para cerrar el modal al hacer clic fuera de la imagen
-        function closeModal() {
-          const modal = document.getElementById('modal');
-          modal.style.display = 'none';
-        }
-      });
+      // Llama a la función para cargar la galería inicialmente
+      loadGallery();
+
+      // Agrega el evento de scroll al window
+      window.addEventListener('scroll', handleScroll);
+
+      // Función para abrir el modal con la imagen seleccionada
+      function openModal(imageSrc) {
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modal-img');
+        modal.style.display = 'flex';
+        modalImg.src = imageSrc;
+      }
+
+      // Función para cerrar el modal al hacer clic fuera de la imagen
+      function closeModal() {
+        const modal = document.getElementById('modal');
+        modal.style.display = 'none';
+      }
+    });
     </script>
   </body>
 </html>

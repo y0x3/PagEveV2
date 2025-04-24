@@ -22,8 +22,7 @@ h1 {
   justify-content: center;
   gap: 1.5rem;
   min-height: 100vh;
-  height: 100vh; /* Altura fija para habilitar el scroll */
-  overflow-y: auto; /* Habilita el scroll vertical */
+  padding: 10px;
 }
 
 .card {
