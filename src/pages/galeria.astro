@@ -36,6 +36,14 @@
         return;
       }
 
+      function handleScroll() {
+        const scrollableElement = document.documentElement || document.body; // Asegúrate de usar el contenedor correcto
+        const { scrollTop, scrollHeight, clientHeight } = scrollableElement;
+
+        if (scrollTop + clientHeight >= scrollHeight - 100) {
+          loadGallery(); // Carga más imágenes cuando el usuario llega al final
+        }
+      }
       // Función para cargar las imágenes desde la API
       async function loadGallery() {
         if (isLoading) return; // Evita cargar si ya hay una solicitud en curso
