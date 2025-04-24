@@ -35,7 +35,13 @@
           console.error("El contenedor de la galería no se encontró en el DOM.");
           return;
         }
-
+         // Evita el comportamiento de pull-to-refresh en dispositivos móviles
+          document.addEventListener('touchstart', (e) => {
+            if (e.touches[0].clientY > 0 && document.documentElement.scrollTop === 0) {
+              e.preventDefault(); // Evita el pull-to-refresh
+            }
+          }, { passive: false });
+          
         // Función para cargar las imágenes desde la API
         async function loadGallery() {
           if (isLoading) return; // Evita cargar si ya hay una solicitud en curso
