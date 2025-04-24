@@ -87,10 +87,18 @@
 
             alert('Imágenes subidas con éxito');
 
-            // Recarga las imágenes para incluir las nuevas
-            await loadImages();
+            // Llama a la API para disparar el redeploy en Vercel
+            const revalidateResponse = await fetch('/api/revalidate', {
+              method: 'POST',
+            });
+
+            if (!revalidateResponse.ok) {
+              throw new Error('Error al disparar la revalidación');
+            }
+
+            console.log('Revalidación disparada exitosamente');
           } catch (err) {
-            alert('Error al subir las imágenes');
+            alert('Error al subir las imágenes o al disparar la revalidación');
             console.error(err);
           }
 
@@ -99,7 +107,6 @@
           fileInput.value = ''; // Limpia el input para permitir nuevas selecciones
         });
 
-        
         // Función de subida a Cloudinary
         async function uploadToCloudinary(file, cloudName, uploadPreset) {
           const formData = new FormData();
