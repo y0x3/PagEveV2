@@ -91,7 +91,9 @@
 
         // Función para manejar el evento de scroll
         function handleScroll() {
-          const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+          const scrollableElement = document.documentElement || document.body; // Asegúrate de usar el contenedor correcto
+          const { scrollTop, scrollHeight, clientHeight } = scrollableElement;
+
           if (scrollTop + clientHeight >= scrollHeight - 100) {
             loadGallery(); // Carga más imágenes cuando el usuario llega al final
           }
@@ -100,8 +102,9 @@
         // Llama a la función para cargar la galería inicialmente
         loadGallery();
 
-        // Agrega el evento de scroll para cargar más imágenes
+        // Agrega el evento de scroll y touchmove
         window.addEventListener('scroll', handleScroll);
+        window.addEventListener('touchmove', handleScroll);
 
         // Función para abrir el modal con la imagen seleccionada
         function openModal(imageSrc) {
