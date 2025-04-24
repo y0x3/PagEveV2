@@ -1,0 +1,28 @@
+---
+// filepath: f:\PROYECTOS\pagEveV2\src\pages\qr.astro
+import QRCode from 'qrcode';
+
+const url = 'https://pag-eve-v2.vercel.app/'; // Reemplaza con la URL de tu página
+let qrCodeDataUrl = '';
+
+try {
+  qrCodeDataUrl = await QRCode.toDataURL(url); // Genera el QR como una imagen base64
+} catch (error) {
+  console.error('Error al generar el QR:', error);
+}
+---
+
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Código QR</title>
+  </head>
+  <body>
+    <h1>Escanea este código QR</h1>
+    <p>Escanea el código QR para acceder a la página:</p>
+    <img src={qrCodeDataUrl} alt="Código QR" />
+    <p>
+      O visita directamente: <a href={url}>{url}</a>
+    </p>
+  </body>
+</html>
