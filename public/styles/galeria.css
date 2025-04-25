@@ -5,6 +5,8 @@ body, html {
   background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
   color: #333;
   overflow: auto; /* Permite el desplazamiento si el contenido es demasiado grande */
+  height: 100%;
+  overflow-y: auto;
 }
 
 h1 {

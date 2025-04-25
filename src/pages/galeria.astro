@@ -12,6 +12,8 @@
     <div class="gallery-container" id="galleryContainer">
       <p>Cargando imágenes...</p>
     </div>
+    <div id="sentinel"></div>
+
     <!-- Modal para mostrar imagen ampliada -->
     <div id="modal" class="modal" onclick="closeModal()">
       <img id="modal-img" src="" alt="Imagen ampliada">
@@ -27,13 +29,8 @@
     <script is:inline>
       document.addEventListener('DOMContentLoaded', () => {
       const galleryContainer = document.getElementById('galleryContainer');
-      let nextCursor = null; // Cursor para la paginación
-      let isLoading = false; // Evita múltiples solicitudes simultáneas
-
-      if (!galleryContainer) {
-        console.error("El contenedor de la galería no se encontró en el DOM.");
-        return;
-      }
+      let nextCursor = null;
+      let isLoading = false;
 
       async function loadGallery() {
         if (isLoading) return;
@@ -41,19 +38,10 @@
 
         try {
           const url = `/api/cloudinary-list${nextCursor ? `?next_cursor=${nextCursor}` : ''}`;
-          const response = await fetch(url, {
-            cache: 'no-store',
-          });
-
-          if (!response.ok) {
-            throw new Error(`Error al obtener las imágenes: ${response.statusText}`);
-          }
-
+          const response = await fetch(url, { cache: 'no-store' });
           const data = await response.json();
 
-          if (!nextCursor) {
-            galleryContainer.innerHTML = '';
-          }
+          if (!nextCursor) galleryContainer.innerHTML = '';
 
           data.images.forEach((url) => {
             const card = document.createElement('div');
@@ -63,7 +51,6 @@
             img.src = url;
             img.alt = 'Imagen de la galería';
             img.className = 'gallery-image';
-
             img.addEventListener('click', () => openModal(url));
 
             card.appendChild(img);
@@ -72,9 +59,6 @@
 
           nextCursor = data.next_cursor;
 
-          if (!nextCursor) {
-            console.log('No hay más imágenes para cargar.');
-          }
         } catch (error) {
           console.error('Error al cargar la galería:', error);
         } finally {
@@ -82,32 +66,34 @@
         }
       }
 
-      function handleScroll() {
-        const scrollableElement = document.documentElement || document.body;
-        const { scrollTop, scrollHeight, clientHeight } = scrollableElement;
-
-        console.log('Scroll detectado:', { scrollTop, scrollHeight, clientHeight });
-
-        if (scrollTop + clientHeight >= scrollHeight - 100 && nextCursor && !isLoading) {
-          console.log('Cargando más imágenes...');
-          loadGallery();
-        }
-      }
-
-      loadGallery();
-      window.addEventListener('scroll', handleScroll);
-
       function openModal(imageSrc) {
         const modal = document.getElementById('modal');
         const modalImg = document.getElementById('modal-img');
         modal.style.display = 'flex';
         modalImg.src = imageSrc;
+        document.body.style.overflow = 'hidden';
       }
 
       function closeModal() {
         const modal = document.getElementById('modal');
         modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
       }
+
+      loadGallery();
+
+      // Aquí va el IntersectionObserver al final:
+      const sentinel = document.getElementById('sentinel');
+      const observer = new IntersectionObserver(async (entries) => {
+        if (entries[0].isIntersecting && nextCursor && !isLoading) {
+          console.log('Sentinel visible, cargando más...');
+          await loadGallery();
+        }
+      }, {
+        rootMargin: '200px',
+      });
+
+      if (sentinel) observer.observe(sentinel);
     });
     </script>
   </body>
