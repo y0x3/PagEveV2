@@ -1,3 +1,4 @@
+/* Estilo general del body */
 body {
   font-family: 'Poppins', sans-serif;
   text-align: center;
@@ -10,43 +11,46 @@ body {
   flex-direction: column;
   align-items: center;
   overflow-x: hidden;
+  padding-top: 6rem; /* Aumenté el espacio superior */
 }
 
+/* Estilo de los encabezados */
 h1, h2, h3 {
   font-family: 'Playfair Display', serif;
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin: 1rem 0;
+  margin: 1.5rem 0; /* Aumenté el margen para que haya más separación */
 }
 
 h1 {
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(6rem, 6vw, 4rem); /* Aumenté el tamaño */
   font-weight: 700;
   color: #b69f7a;
   text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
-  margin-top: 2rem;
+  margin-top: 4rem; /* Aumenté el margen superior */
 }
 
 h2 {
-  font-size: 2rem;
+  font-size: 4rem; /* Aumenté el tamaño */
   font-weight: 600;
   color: #7f5f3e;
 }
 
 h3 {
-  font-size: 1.5rem;
+  font-size: 1.8rem; /* Aumenté el tamaño */
   font-weight: 500;
   color: #333;
   font-style: italic;
 }
 
 p {
-  font-size: 1.1rem;
+  font-size: 1.2rem; /* Aumenté el tamaño */
   line-height: 1.8;
   color: #555;
-  margin: 1rem 0;
+  margin: 1.5rem 0; /* Aumenté el margen para más separación */
 }
 
+/* Estilo para los enlaces */
 a {
   color: #b69f7a;
   text-decoration: none;
@@ -57,12 +61,12 @@ a:hover {
   color: #7f5f3e;
 }
 
-/* Carrusel de imagen */
+/* Estilo del carrusel */
 .image-container {
   width: 90%;
   max-width: 90%;
   height: clamp(500px, 80vh, 999px);
-  margin: 2rem auto;
+  margin: 2.5rem auto; /* Aumenté el margen */
   border-radius: 15px;
   background: #e5e7eb;
   position: relative;
@@ -92,19 +96,19 @@ a:hover {
   transform: scale(1.05);
 }
 
-/* Botón de subir */
+/* Botón de subir imagen */
 #uploadBtn {
   background: #b69f7a;
   color: white;
   border: none;
-  padding: 1rem 2.5rem;
-  font-size: 1.2rem;
+  padding: 1.8rem 3.5rem; /* Aumenté el tamaño del padding */
+  font-size: 3rem; /* Aumenté el tamaño de la fuente */
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s ease;
-  margin-top: 2rem;
-  max-width: 300px;
+  margin-top: 4rem; /* Aumenté el margen superior */
+  max-width: 380px; /* Aumenté el tamaño máximo */
   width: 100%;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
@@ -116,7 +120,7 @@ a:hover {
 
 /* Leyenda cordial */
 .invite-text {
-  font-size: 1.1rem;
+  font-size: 2rem; /* Aumenté el tamaño */
   color: #333;
   font-weight: 400;
   margin-top: 1rem;
@@ -132,13 +136,13 @@ a:hover {
 /* Enlace a la galería */
 .page-link {
   display: inline-block;
-  margin-top: 2.5rem;
-  font-size: 1.1rem;
+  margin-top: 3rem; /* Aumenté el margen superior */
+  font-size: 2.5rem; /* Aumenté el tamaño */
   font-weight: 500;
   color: #b69f7a;
   text-decoration: none;
   border: 2px solid #b69f7a;
-  padding: 0.6rem 1.2rem;
+  padding: 0.8rem 1.5rem; /* Aumenté el padding */
   border-radius: 8px;
   transition: all 0.3s ease;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
@@ -157,11 +161,12 @@ a:hover {
   }
 
   h1 {
-    font-size: 3rem;
+    font-size: 3.5rem;
+    margin-top: 5rem; /* Aumenté el margen superior */
   }
 
   h2 {
-    font-size: 1.8rem;
+    font-size: 2rem; /* Aumenté el tamaño */
   }
 
   .image-container {
@@ -169,19 +174,20 @@ a:hover {
   }
 
   #uploadBtn {
-    padding: 1rem 2rem;
-    font-size: 1.1rem;
-    max-width: 250px;
+    padding: 1.5rem 3rem; /* Aumenté el tamaño del padding */
+    font-size: 1.5rem; /* Aumenté el tamaño de la fuente */
+    max-width: 300px; /* Aumenté el tamaño máximo */
   }
 
   .invite-text {
-    font-size: 1rem;
+    font-size: 1.2rem;
     max-width: 90%;
     margin: 0 auto;
   }
 
   .page-link {
-    margin-top: 2rem;
+    margin-top: 2.5rem;
+    font-size: 1.5rem; /* Aumenté el tamaño */
   }
 
   .image-container:hover,
@@ -197,7 +203,8 @@ a:hover {
   }
 
   h1 {
-    font-size: 2.5rem;
+    font-size: 3rem;
+    margin-top: 6rem; /* Aumenté el margen superior */
   }
 
   .image-container {
@@ -205,23 +212,16 @@ a:hover {
   }
 
   #uploadBtn {
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    max-width: 200px;
+    padding: 1.2rem 2.5rem; /* Aumenté el tamaño del padding */
+    font-size: 1.6rem; /* Aumenté el tamaño de la fuente */
+    max-width: 320px; /* Aumenté el tamaño máximo */
   }
 
   .invite-text {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
   }
 
   .page-link {
-    font-size: 1rem;
-    margin-top: 1.5rem;
-  }
-
-  .image-container:hover,
-  .image-container img:hover {
-    transform: none;
-    box-shadow: none;
+    font-size: 1.4rem; /* Aumenté el tamaño */
   }
 }
