@@ -1,58 +1,71 @@
 body, html {
   font-family: 'Poppins', sans-serif;
   text-align: center;
-  padding: 2rem;
+  margin: 0;
+  padding: 0;
   background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
   color: #333;
-  overflow: auto; /* Permite el desplazamiento si el contenido es demasiado grande */
   height: 100%;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Contenedor principal con padding */
+.main-wrapper {
+  padding: 1rem 1rem 6rem; /* Espacio para el botón flotante */
+  min-height: 100vh;
   overflow-y: auto;
 }
 
 h1 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(6rem, 6vw, 4rem); /* Tamaño adaptable */
+  font-size: clamp(2rem, 8vw, 4rem);
   font-weight: 700;
   color: #b69f7a;
   text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
-  margin-bottom: 3rem;
-  margin-top: 2rem;
+  margin: 1rem 0 2rem;
 }
 
-
+/* Contenedor de la galería - MEJORADO */
 .gallery-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1.5rem;
-  min-height: 100vh;
-  padding: 10px;
-  overflow: visible;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 45vw, 190px), 1fr));
+  gap: clamp(0.8rem, 2vw, 1.5rem);
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-/* Tarjeta individual */
+/* Tarjeta individual - RESPONSIVA */
 .card {
-  width: 190px;
-  height: 254px;
-  border-radius: 30px;
+  width: 100%;
+  aspect-ratio: 3/4; /* Mantiene proporción 3:4 */
+  border-radius: clamp(15px, 4vw, 30px);
   background: #212121;
-  box-shadow: 15px 15px 30px rgb(25, 25, 25),
-              -15px -15px 30px rgb(60, 60, 60);
+  box-shadow: 10px 10px 20px rgb(25, 25, 25),
+              -10px -10px 20px rgb(60, 60, 60);
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 30px;
+  border-radius: clamp(15px, 4vw, 30px);
   transition: transform 0.3s ease;
+  display: block;
 }
 
 .card:hover {
   transform: scale(1.05);
+  box-shadow: 15px 15px 30px rgb(15, 15, 15),
+              -15px -15px 30px rgb(70, 70, 70);
 }
 
 .card img:hover {
@@ -66,118 +79,185 @@ h1 {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: rgba(0, 0, 0, 0.9);
   display: none;
   justify-content: center;
   align-items: center;
   z-index: 1100;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .modal img {
-  max-width: 90vw;
-  max-height: 90vh;
+  max-width: 95vw;
+  max-height: 95vh;
   object-fit: contain;
-  border-radius: 15px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
 }
 
 .modal.active {
   display: flex;
-  animation: slideIn 0.5s ease-out;
+  animation: fadeIn 0.3s ease-out;
 }
 
-/* Botón cerrar modal */
+/* Botón cerrar modal - MEJORADO */
 .modal-close {
   position: absolute;
-  top: 2rem;
-  right: 2rem;
-  font-size: 2rem;
+  top: clamp(1rem, 3vw, 2rem);
+  right: clamp(1rem, 3vw, 2rem);
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
   color: white;
-  background: transparent;
-  border: none;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid white;
+  border-radius: 50%;
+  width: clamp(40px, 10vw, 50px);
+  height: clamp(40px, 10vw, 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   z-index: 1200;
-  transition: transform 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .modal-close:hover {
-  transform: scale(1.2);
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.modal-close:active {
+  transform: scale(0.95);
 }
 
 /* Footer */
 footer {
   margin-top: 2rem;
-  font-size: 1rem;
+  padding: 1rem;
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
   color: #6b7280;
 }
 
-/* Botón para volver */
+/* Botón para volver - MEJORADO Y RESPONSIVO */
 .back-btn {
   position: fixed;
-  bottom: 2.5rem;
+  bottom: clamp(1rem, 3vw, 2rem);
   left: 50%;
   transform: translateX(-50%);
   background-color: #b69f7a;
   color: white;
-  padding: 2rem 3rem;
-  font-size: 3rem;
-  font-weight: bold;
-  border-radius: 12px;
+  padding: clamp(0.8rem, 2.5vw, 1.2rem) clamp(1.5rem, 5vw, 2.5rem);
+  font-size: clamp(1rem, 3.5vw, 1.3rem);
+  font-weight: 600;
+  border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   text-decoration: none;
-  transition: background-color 0.3s, box-shadow 0.3s;
+  transition: all 0.3s ease;
   z-index: 1000;
+  white-space: nowrap;
 }
 
 .back-btn:hover {
   background-color: #7f5f3e;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  transform: translateX(-50%) translateY(-2px);
 }
 
 .back-btn:active {
   transform: translateX(-50%) scale(0.98);
 }
 
-/* Animación modal */
-@keyframes slideIn {
+/* Animaciones */
+@keyframes fadeIn {
   0% {
-    transform: translateY(-100%);
+    opacity: 0;
   }
   100% {
-    transform: translateY(0);
+    opacity: 1;
   }
 }
 
-/* Responsive */
+/* Tablets */
 @media (max-width: 768px) {
-  h1 {
-    font-size: 3rem;
-    margin-top: 3rem;
+  .gallery-container {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
   }
-
-  .back-btn {
-    padding: 1.3rem 2.5rem;
-    font-size: 1.4rem;
-  }
-
-  footer {
-    font-size: 1rem;
+  
+  .main-wrapper {
+    padding: 0.5rem 0.5rem 5rem;
   }
 }
 
+/* Móviles grandes */
 @media (max-width: 480px) {
+  .gallery-container {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.8rem;
+    padding: 0.3rem;
+  }
+  
+  .main-wrapper {
+    padding: 0.5rem 0.3rem 5rem;
+  }
+  
   h1 {
-    font-size: 2.5rem;
-    margin-top: 4rem;
+    margin: 0.5rem 0 1.5rem;
   }
-
-  .back-btn {
-    padding: 1.2rem 2rem;
-    font-size: 1.3rem;
+  
+  /* Desactivar hover en móviles */
+  .card:hover {
+    transform: none;
+    box-shadow: 10px 10px 20px rgb(25, 25, 25),
+                -10px -10px 20px rgb(60, 60, 60);
   }
+  
+  .card img:hover {
+    transform: none;
+  }
+}
 
-  footer {
-    font-size: 0.95rem;
+/* Móviles pequeños */
+@media (max-width: 360px) {
+  .gallery-container {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.6rem;
+  }
+}
+
+/* Pantallas muy anchas */
+@media (min-width: 1400px) {
+  .gallery-container {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2rem;
+  }
+}
+
+/* Optimización para pantallas táctiles */
+@media (hover: none) and (pointer: coarse) {
+  .card:hover,
+  .card img:hover,
+  .modal-close:hover,
+  .back-btn:hover {
+    transform: none;
+  }
+  
+  .card:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Modo landscape en móviles */
+@media (max-width: 768px) and (orientation: landscape) {
+  .gallery-container {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  
+  h1 {
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+    margin: 0.5rem 0 1rem;
+  }
+  
+  .main-wrapper {
+    padding: 0.5rem 1rem 4rem;
   }
 }
